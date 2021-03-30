@@ -1,11 +1,6 @@
 import { Action, UserState } from "../utils/types";
+import { USER_ACTION_TYPES } from "../constants/action_types";
 import { getAuthUser } from "../utils";
-
-const USER_ACTION_TYPES = {
-    LOGIN: "LOGIN",
-    LOGOUT: "LOGOUT",
-    CURRENT_USER: "CURRENT_USER"
-}
 
 export const UserReducer = (state: UserState, action: Action) => {
     switch (action.type) {

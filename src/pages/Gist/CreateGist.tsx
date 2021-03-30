@@ -1,9 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import Card from '../../components/Card/Card';
-import { GistContext } from '../../context/GistContext';
+import { GIST_ACTION_TYPES } from '../../constants/action_types';
+import Headings from '../../constants/headings';
+import { useGistContext } from '../../context/GistContext';
 import { createNewGist } from '../../utils';
-import { GistPost, GIST_ACTION_TYPES } from '../../utils/types';
+import { GistPost } from '../../utils/types';
 import { Div } from './Style';
 
 const CreateGist: React.FC = () => {
@@ -14,25 +16,25 @@ const CreateGist: React.FC = () => {
     const [description, setDescription] = useState("");
     const [content, setContent] = useState("");
     const history = useHistory();
-    const { gistDispatch } = GistContext();
+    const { gistDispatch } = useGistContext();
 
     const handleFileNameChange = useCallback(() => {
         if (fileNameRef.current?.value !== undefined) {
             setFileName(fileNameRef.current.value);
         }
-    }, []);
+    }, [fileNameRef]);
 
     const handleDescriptionChange = useCallback(() => {
         if (descriptionRef.current?.value !== undefined) {
             setDescription(descriptionRef.current.value);
         }
-    }, []);
+    }, [descriptionRef]);
 
     const handleContentChange = useCallback(() => {
         if (contentRef.current?.value !== undefined) {
             setContent(contentRef.current.value);
         }
-    }, []);
+    }, [contentRef]);
 
     const handleSaveButton = useCallback(() => {
         if (fileName !== "" && content !== "") {
@@ -81,7 +83,7 @@ const CreateGist: React.FC = () => {
                 handleContentChange={handleContentChange}
                 handleSaveButton={handleSaveButton}
                 handleCancelButton={handleCancelButton}
-                mode="create"
+                heading={Headings.CreateGist}
             />
         </Div>
     );

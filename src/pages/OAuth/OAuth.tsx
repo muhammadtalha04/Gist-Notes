@@ -4,10 +4,10 @@ import { createSession, getUser } from '../../utils';
 import { BounceLoader } from 'react-spinners';
 import { Redirect } from 'react-router';
 import { Div } from './Style';
-import { UserContext } from '../../context/UserContext';
+import { useUserContext } from '../../context/UserContext';
 
 const OAuth: React.FC = () => {
-    const { userDispatch } = UserContext();
+    const { userDispatch } = useUserContext();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,8 +20,7 @@ const OAuth: React.FC = () => {
             window.localStorage.setItem("user", JSON.stringify(data));
             setLoading(false);
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [userDispatch]);
 
     return (
         <React.Fragment>

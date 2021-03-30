@@ -2,6 +2,7 @@ import { API_OPTIONS, Gist, GistPost } from "./types";
 
 const GITHUB_API_URL = 'https://api.github.com';
 
+// This function takes url and options as parameters and calls the api using fetch function and returns the output from the server.
 const fetchData = (url: string, options?: object) => {
     let method: string | undefined = undefined;
 
@@ -23,34 +24,36 @@ const fetchData = (url: string, options?: object) => {
     });
 }
 
-export const generatePageNums = (length: number, perPage: number): number[] => {
-    const pageNums: number[] = [];
-
-    for (let i = 1; i <= Math.ceil(length / perPage); i++) {
-        pageNums.push(i);
-    }
-
-    return pageNums;
-}
-
+/*
+    This function removes the records whose id matches with the given id from the data and return the remaining.
+*/
 export const removeGist = (id: string, payload: Gist[]) => {
     return payload.filter((gist) => gist.id !== id);
 }
 
+/*
+    This function traverses the whole array and if the record's id matches with the given id, it replaces that record with the updated record.
+*/
 export const editGistData = (id: string, payload: Gist, data: Gist[]) => {
     return data.map((gist) => {
         if (id === gist.id) {
-            return payload;
-        } else {
-            return gist;
+            gist.files = payload.files;
+            gist.description = payload.description;
         }
+        return gist;
     });
 }
 
+/*
+    This function returns the client id to be used for authorization purpose when logging in.
+*/
 export const getClientId = (): string => {
     return "606106b402d92b57ab55";
 }
 
+/*
+    This function gets the value of user from browser's local storage and returns it if found.
+*/
 export const getAuthUser = () => {
     const user = window.localStorage.getItem("user");
 
@@ -61,10 +64,16 @@ export const getAuthUser = () => {
     }
 }
 
+/*
+    This function saves the token in browser's local memory
+*/
 export const createSession = (token: string): void => {
     window.localStorage.setItem('token', token);
 }
 
+/*
+    This function uses the github api to get the details of a user and return them.
+*/
 export const getUser = (token: string) => {
     const url = `${GITHUB_API_URL}/user`;
     const options = {

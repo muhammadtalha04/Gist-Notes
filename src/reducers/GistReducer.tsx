@@ -1,5 +1,6 @@
+import { GIST_ACTION_TYPES } from "../constants/action_types";
 import { editGistData, removeGist } from "../utils";
-import { Action, GistState, GIST_ACTION_TYPES } from "../utils/types";
+import { Action, GistState } from "../utils/types";
 
 export const GistReducer = (state: GistState, action: Action) => {
     switch (action.type) {

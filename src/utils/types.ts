@@ -6,7 +6,7 @@ export type UserState = {
     url: string;
 };
 
-export type Action = | {
+export type Action = {
     type: string;
     payload: any;
 };
@@ -19,17 +19,14 @@ export type Gist = {
     description: string,
 }
 
-export type GistState = | {
+export type GistState = {
     data: Gist[]
 }
 
-export const GIST_ACTION_TYPES = {
-    SET_GISTS: "SET_GISTS",
-    ADD_GIST: "ADD_GIST",
-    EDIT_GIST: "EDIT_GIST",
-    DELETE_GIST: "DELETE_GIST",
-
-};
+export type AuthState = {
+    token: string | null,
+    loggedIn: boolean,
+}
 
 export type GistPost = {
     files: any,

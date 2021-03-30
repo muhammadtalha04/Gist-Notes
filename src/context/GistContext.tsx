@@ -30,4 +30,4 @@ export const GistProvider: React.FC<GistProviderProps> = ({ children }) => {
     );
 }
 
-export const GistContext = () => useContext(Gists);
+export const useGistContext = () => useContext(Gists);

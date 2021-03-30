@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router';
 import Card from '../../components/Card/Card';
-import { GistContext } from '../../context/GistContext';
+import { GIST_ACTION_TYPES } from '../../constants/action_types';
+import Headings from '../../constants/headings';
+import { useGistContext } from '../../context/GistContext';
 import { getGist, updateGist } from '../../utils';
-import { GistPost, GIST_ACTION_TYPES } from '../../utils/types';
+import { GistPost } from '../../utils/types';
 import { Div } from './Style';
 
 interface Params {
@@ -18,25 +20,25 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
     const [description, setDescription] = useState("");
     const [content, setContent] = useState("");
     const history = useHistory();
-    const { gistDispatch } = GistContext();
+    const { gistDispatch } = useGistContext();
 
     const handleFileNameChange = useCallback(() => {
         if (fileNameRef.current?.value !== undefined) {
             setFileName(fileNameRef.current.value);
         }
-    }, []);
+    }, [fileNameRef]);
 
     const handleDescriptionChange = useCallback(() => {
         if (descriptionRef.current?.value !== undefined) {
             setDescription(descriptionRef.current.value);
         }
-    }, []);
+    }, [descriptionRef]);
 
     const handleContentChange = useCallback(() => {
         if (contentRef.current?.value !== undefined) {
             setContent(contentRef.current.value);
         }
-    }, []);
+    }, [contentRef]);
 
     const handleSaveButton = useCallback(() => {
         if (fileName !== "" && content !== "") {
@@ -52,10 +54,10 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
             };
 
             if (token != null) {
+                gistDispatch({ type: GIST_ACTION_TYPES.EDIT_GIST, payload: { data: data, id: match.params.id } });
+
                 updateGist(token, data, match.params.id).then((data) => {
                     if (data !== null) {
-                        gistDispatch({ type: GIST_ACTION_TYPES.EDIT_GIST, payload: { data: data, id: match.params.id } });
-
                         alert("Gist updated successfully");
 
                         history.push('/');
@@ -85,7 +87,7 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                 }
             });
         }
-    }, [match]);
+    }, [match.params.id]);
 
     return (
         <Div className="container mt-5 mb-5">
@@ -101,7 +103,7 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                 handleContentChange={handleContentChange}
                 handleSaveButton={handleSaveButton}
                 handleCancelButton={handleCancelButton}
-                mode="edit"
+                heading={Headings.EditGist}
             />
         </Div>
     );

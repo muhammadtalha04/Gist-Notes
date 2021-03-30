@@ -34,4 +34,4 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     );
 }
 
-export const UserContext = () => useContext(Users);
+export const useUserContext = () => useContext(Users);

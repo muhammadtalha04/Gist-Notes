@@ -5,6 +5,8 @@ const Headings = {
     DescriptionPlaceholder: "Gist description...",
     Login: "Sign in",
     Logout: "Sign out",
+    CreateGist: "Create new gist",
+    EditGist: "Edit gist",
 };
 
 export default Headings;

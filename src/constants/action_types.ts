@@ -1,0 +1,13 @@
+export const GIST_ACTION_TYPES = {
+    SET_GISTS: "SET_GISTS",
+    ADD_GIST: "ADD_GIST",
+    EDIT_GIST: "EDIT_GIST",
+    DELETE_GIST: "DELETE_GIST",
+
+};
+
+export const USER_ACTION_TYPES = {
+    LOGIN: "LOGIN",
+    LOGOUT: "LOGOUT",
+    CURRENT_USER: "CURRENT_USER"
+}

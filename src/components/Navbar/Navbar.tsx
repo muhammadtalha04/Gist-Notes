@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Headings from '../../utils/headings';
+import { useHistory } from 'react-router-dom';
+import Headings from '../../constants/headings';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { Div, Nav, RightDiv } from './Style';
 import { getAuthUser, getClientId } from '../../utils';
-import { UserContext } from '../../context/UserContext';
+import { useUserContext } from '../../context/UserContext';
+import Text from '../Text/Text';
+import { Colors } from '../../constants/colors';
 
 const Navbar: React.FC = () => {
     const clientId = getClientId();
@@ -13,19 +15,8 @@ const Navbar: React.FC = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const searchRef = useRef<HTMLInputElement>(null);
     let user = getAuthUser();
-    const { userDispatch } = UserContext();
-
-    useEffect(() => {
-        userDispatch({ type: "CURRENT_USER", payload: {} });
-
-        if (user) {
-            setLoggedIn(true);
-        } else {
-            setLoggedIn(false);
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedIn]);
+    const { userDispatch } = useUserContext();
+    const history = useHistory();
 
     const handleSearch = useCallback(() => {
         changeSearch(searchRef.current!.value);
@@ -45,10 +36,26 @@ const Navbar: React.FC = () => {
         }
     }, [user, userDispatch]);
 
+    const handleNavToHome = useCallback(() => {
+        history.push('/');
+    }, [history]);
+
+    useEffect(() => {
+        userDispatch({ type: "CURRENT_USER", payload: {} });
+
+        if (user) {
+            setLoggedIn(true);
+        } else {
+            setLoggedIn(false);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loggedIn]);
+
     return (
         <Nav className="navbar navbar-expand-sm bg-dark navbar-dark">
             <Div className="container">
-                <Link to={"/"} className="navbar-brand">{Headings.TITLE}</Link>
+                <Text text={Headings.TITLE} fontWeight="600" color={Colors.PRIMARY.color} classN="navbar-brand" fontSize="16" handleClick={handleNavToHome} />
 
                 <RightDiv>
                     <Input reference={searchRef} value={search} handleInputChange={handleSearch} placeholder={Headings.SearchBoxPlaceholder} />

@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, MouseEventHandler, RefObject } from 'react';
-import Headings from '../../utils/headings';
+import Headings from '../../constants/headings';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import TextArea from '../TextArea/TextArea';
@@ -17,14 +17,14 @@ interface CardProps {
     handleContentChange: ChangeEventHandler<HTMLTextAreaElement>;
     handleSaveButton: MouseEventHandler<HTMLButtonElement>;
     handleCancelButton: MouseEventHandler<HTMLButtonElement>;
-    mode: string;
+    heading: string;
 }
 
-const Card: React.FC<CardProps> = ({ fileName, description, content, fileNameRef, descriptionRef, contentRef, handleFileNameChange, handleDescriptionChange, handleContentChange, handleSaveButton, handleCancelButton, mode }) => {
+const Card: React.FC<CardProps> = ({ fileName, description, content, fileNameRef, descriptionRef, contentRef, handleFileNameChange, handleDescriptionChange, handleContentChange, handleSaveButton, handleCancelButton, heading }) => {
     return (
         <OuterDiv className="col-sm-8 offset-md-2">
             <DivHeader>
-                {mode === "create" ? "Create New Gist" : "Edit Gist"}
+                {heading}
             </DivHeader>
 
             <DivBody>
