@@ -3,6 +3,7 @@ import { RouteComponentProps, useHistory } from 'react-router';
 import Card from '../../components/Card/Card';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
+import { useAuthContext } from '../../context/AuthContext';
 import { useGistContext } from '../../context/GistContext';
 import { getGist, updateGist } from '../../utils';
 import { GistPost } from '../../utils/types';
@@ -21,6 +22,7 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
     const [content, setContent] = useState("");
     const history = useHistory();
     const { gistDispatch } = useGistContext();
+    const { authState } = useAuthContext();
 
     const handleFileNameChange = useCallback(() => {
         if (fileNameRef.current?.value !== undefined) {
@@ -42,7 +44,6 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
 
     const handleSaveButton = useCallback(() => {
         if (fileName !== "" && content !== "") {
-            const token = window.localStorage.getItem("token");
             const data: GistPost = {
                 files: {
                 },
@@ -53,10 +54,10 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                 content: content
             };
 
-            if (token != null) {
+            if (authState.token != null) {
                 gistDispatch({ type: GIST_ACTION_TYPES.EDIT_GIST, payload: { data: data, id: match.params.id } });
 
-                updateGist(token, data, match.params.id).then((data) => {
+                updateGist(authState.token, data, match.params.id).then((data) => {
                     if (data !== null) {
                         alert("Gist updated successfully");
 
@@ -67,17 +68,15 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
         } else {
             alert("Filename and content are required");
         }
-    }, [fileName, description, content, history, match.params.id, gistDispatch]);
+    }, [fileName, description, content, history, match.params.id, gistDispatch, authState]);
 
     const handleCancelButton = useCallback(() => {
         history.push('/');
     }, [history]);
 
     useEffect(() => {
-        const token = window.localStorage.getItem("token");
-
-        if (token !== null) {
-            getGist(match.params.id, token).then((data) => {
+        if (authState.token !== null) {
+            getGist(match.params.id, authState.token).then((data) => {
                 if (data) {
                     const dataFileName = Object.keys(data['files'])[0];
 
@@ -86,8 +85,10 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                     setContent(data['files'][dataFileName]['content']);
                 }
             });
+        } else {
+            history.push('/');
         }
-    }, [match.params.id]);
+    }, [match.params.id, authState, history]);
 
     return (
         <Div className="container mt-5 mb-5">

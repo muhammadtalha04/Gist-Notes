@@ -1,8 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import Card from '../../components/Card/Card';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
+import { useAuthContext } from '../../context/AuthContext';
 import { useGistContext } from '../../context/GistContext';
 import { createNewGist } from '../../utils';
 import { GistPost } from '../../utils/types';
@@ -17,6 +18,7 @@ const CreateGist: React.FC = () => {
     const [content, setContent] = useState("");
     const history = useHistory();
     const { gistDispatch } = useGistContext();
+    const { authState } = useAuthContext();
 
     const handleFileNameChange = useCallback(() => {
         if (fileNameRef.current?.value !== undefined) {
@@ -38,7 +40,6 @@ const CreateGist: React.FC = () => {
 
     const handleSaveButton = useCallback(() => {
         if (fileName !== "" && content !== "") {
-            const token = window.localStorage.getItem("token");
             const data: GistPost = {
                 files: {
                 },
@@ -49,8 +50,8 @@ const CreateGist: React.FC = () => {
                 content: content
             };
 
-            if (token != null) {
-                createNewGist(token, data).then((data) => {
+            if (authState.token != null) {
+                createNewGist(authState.token, data).then((data) => {
                     if (data !== null) {
                         gistDispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data })
 
@@ -59,15 +60,23 @@ const CreateGist: React.FC = () => {
                         history.push('/');
                     }
                 });
+            } else {
+                history.push('/');
             }
         } else {
             alert("Filename and content are required");
         }
-    }, [fileName, description, content, history, gistDispatch]);
+    }, [fileName, description, content, history, gistDispatch, authState]);
 
     const handleCancelButton = useCallback(() => {
         history.push('/');
     }, [history]);
+
+    useEffect(() => {
+        if (authState.token === null) {
+            history.push('/');
+        }
+    }, [authState, history]);
 
     return (
         <Div className="container mt-5 mb-5">

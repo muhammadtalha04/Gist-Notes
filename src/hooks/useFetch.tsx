@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useFetch = (url: string, opt: boolean) => {
+export const useFetch = (url: string, opt: boolean, token: string) => {
     const [response, setResponse] = useState({});
     const [error, setError] = useState({});
 
@@ -13,7 +13,7 @@ export const useFetch = (url: string, opt: boolean) => {
                     method: "get",
                     headers: {
                         Accept: "application/json",
-                        Authorization: `Bearer ${window.localStorage.getItem("token")}`
+                        Authorization: `Bearer ${token}`
                     }
                 };
             }

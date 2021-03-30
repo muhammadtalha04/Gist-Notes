@@ -52,26 +52,6 @@ export const getClientId = (): string => {
 }
 
 /*
-    This function gets the value of user from browser's local storage and returns it if found.
-*/
-export const getAuthUser = () => {
-    const user = window.localStorage.getItem("user");
-
-    if (user !== null) {
-        return JSON.parse(user);
-    } else {
-        return false;
-    }
-}
-
-/*
-    This function saves the token in browser's local memory
-*/
-export const createSession = (token: string): void => {
-    window.localStorage.setItem('token', token);
-}
-
-/*
     This function uses the github api to get the details of a user and return them.
 */
 export const getUser = (token: string) => {

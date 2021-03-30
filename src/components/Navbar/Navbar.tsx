@@ -1,21 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Headings from '../../constants/headings';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { Div, Nav, RightDiv } from './Style';
-import { getAuthUser, getClientId } from '../../utils';
+import { getClientId } from '../../utils';
 import { useUserContext } from '../../context/UserContext';
 import Text from '../Text/Text';
 import { Colors } from '../../constants/colors';
+import { useAuthContext } from '../../context/AuthContext';
+import { AUTH_ACTION_TYPES } from '../../constants/action_types';
 
 const Navbar: React.FC = () => {
     const clientId = getClientId();
     const [search, changeSearch] = useState("");
-    const [loggedIn, setLoggedIn] = useState(false);
     const searchRef = useRef<HTMLInputElement>(null);
-    let user = getAuthUser();
     const { userDispatch } = useUserContext();
+    const { authState, authDispatch } = useAuthContext();
     const history = useHistory();
 
     const handleSearch = useCallback(() => {
@@ -28,29 +29,14 @@ const Navbar: React.FC = () => {
     }, [clientId]);
 
     const handleLogout = useCallback(() => {
-        if (user !== false) {
-            setLoggedIn(false);
-            userDispatch({ type: "LOGOUT", payload: {} })
-            window.localStorage.removeItem('token');
-            window.localStorage.removeItem('user');
-        }
-    }, [user, userDispatch]);
+        userDispatch({ type: "LOGOUT", payload: {} })
+        authDispatch({ type: AUTH_ACTION_TYPES.LOGOUT, payload: {} })
+        history.push('/');
+    }, [authDispatch, userDispatch, history]);
 
     const handleNavToHome = useCallback(() => {
         history.push('/');
     }, [history]);
-
-    useEffect(() => {
-        userDispatch({ type: "CURRENT_USER", payload: {} });
-
-        if (user) {
-            setLoggedIn(true);
-        } else {
-            setLoggedIn(false);
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loggedIn]);
 
     return (
         <Nav className="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -60,7 +46,7 @@ const Navbar: React.FC = () => {
                 <RightDiv>
                     <Input reference={searchRef} value={search} handleInputChange={handleSearch} placeholder={Headings.SearchBoxPlaceholder} />
 
-                    {(loggedIn) ? (<Button onClickHandle={handleLogout} text={Headings.Logout} />) : (<Button onClickHandle={handleLogin} text={Headings.Login} />)}
+                    {(authState.loggedIn) ? (<Button onClickHandle={handleLogout} text={Headings.Logout} />) : (<Button onClickHandle={handleLogin} text={Headings.Login} />)}
                 </RightDiv>
             </Div>
         </Nav>

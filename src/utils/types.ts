@@ -1,7 +1,7 @@
 export type UserState = {
     name: string;
     id: number;
-    username: string;
+    login: string;
     avatar: string;
     url: string;
 };

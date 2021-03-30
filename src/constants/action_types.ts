@@ -11,3 +11,8 @@ export const USER_ACTION_TYPES = {
     LOGOUT: "LOGOUT",
     CURRENT_USER: "CURRENT_USER"
 }
+
+export const AUTH_ACTION_TYPES = {
+    LOGIN: "LOGIN",
+    LOGOUT: "LOGOUT",
+}

@@ -10,7 +10,7 @@ type UserContextType = {
 const initialState = {
     state: {
         name: "",
-        username: "",
+        login: "",
         id: 0,
         avatar: "",
         url: "",
