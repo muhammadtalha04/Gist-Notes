@@ -1,0 +1,19 @@
+"@testing-library/jest-dom":        This testing library provides a set of custom jest matchers that we can use to extend jest. 
+"@testing-library/react":           This library is used for the testing of our React components.
+"@testing-library/user-event":      This library is used to simulate the real events that would happen in the browser as the user interacts with it like a mouse click.
+"@types/jest":          This package contains type definitions for jest.
+"@types/node":          This package contains type definitions for Node.js
+"@types/react":         This package contains type definitions for react.
+"@types/react-dom":     This package contains type definitions for react-dom.
+"@types/react-router":  This package contains type definitions for the React Router. It is used when we are using typescript instead of js in the application.
+"bootstrap":            Used this package to use bootstrap classes in the application for designing the UI.
+"font-awesome":         Used this package to display icons in the application.
+"react":                Used this package for creating user interfaces. It is used with a react renderer like react-dom for web applications.
+"react-dom":            This package serves as an entry point to the DOM and serves as a renderer for React. It is intended to be used with the react package.
+"react-router":         This package contains the main routing functionality for the React Router but it is not used directly. It is a dependency to the react-router-dom package.
+"react-router-dom":     This package provides DOM bindings for React Router. It installs react-router as a  dependency to use its routing functionality.
+"react-scripts":        This package contains configurations and scripts that are used by Create React App.
+"react-spinners":       Used this package to display a loader when the login is in progress.
+"styled-components":    Used this package for styling of components by using tagged template literals and css.
+"typescript":           It is a language which extends javascript by adding types to it. We are using typescript as the main language for the development of this application.
+"web-vitals":           This package provides functionality for measuring the web vitals. Web vitals help us indentify opportunities which can be improved for better user experience.
