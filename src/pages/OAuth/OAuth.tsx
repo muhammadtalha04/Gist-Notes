@@ -7,6 +7,7 @@ import { Div } from './Style';
 import { useUserContext } from '../../context/UserContext';
 import { useAuthContext } from '../../context/AuthContext';
 import { AUTH_ACTION_TYPES } from '../../constants/action_types';
+import { URLS } from '../../router/urls';
 
 const OAuth: React.FC = () => {
     const { userDispatch } = useUserContext();
@@ -30,7 +31,7 @@ const OAuth: React.FC = () => {
     return (
         <React.Fragment>
             <Div className="container text-center">
-                {loading ? <BounceLoader></BounceLoader> : <Redirect to="/" />}
+                {loading ? <BounceLoader></BounceLoader> : <Redirect to={URLS.Default} />}
             </Div>
         </React.Fragment>
     );

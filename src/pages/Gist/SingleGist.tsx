@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import Card from '../../components/Card/Card';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import { useAuthContext } from '../../context/AuthContext';
 import { useGistContext } from '../../context/GistContext';
+import { URLS } from '../../router/urls';
 import { deleteGist, forkGist, getGistData, starGist } from '../../utils';
 import { Gist } from '../../utils/types';
 import { Div } from './Style';
@@ -12,12 +13,13 @@ interface Params {
     id: string;
 }
 
-const SingleGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
+const SingleGist: React.FC = () => {
     const initGist: Gist = { id: "", files: {}, owner: { login: "", avatar_url: "" }, updated_at: "", description: "" };
     const [gist, setGist] = useState(initGist);
     const { gistState, gistDispatch } = useGistContext();
     const { authState } = useAuthContext();
     const history = useHistory();
+    const match = useRouteMatch<Params>(URLS.SingleGist);
 
     const handleGistEdit = useCallback((id: string) => {
         history.push(`/edit/${id}`);
@@ -58,7 +60,7 @@ const SingleGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
     }, [authState, gistDispatch]);
 
     useEffect(() => {
-        if (authState.token !== null) {
+        if (match !== null) {
             const gistRecord = getGistData(match.params.id, gistState.data);
 
             if (gistRecord !== null && gist.id === "") {
@@ -66,10 +68,8 @@ const SingleGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
             } else if (gistRecord === null) {
                 history.push("/");
             }
-        } else {
-            history.push("/");
         }
-    }, [authState, gist, match.params.id, history, gistState.data, setGist]);
+    }, [gist, match, history, gistState.data, setGist]);
 
     return (
         <Div className="container mt-5 mb-5">

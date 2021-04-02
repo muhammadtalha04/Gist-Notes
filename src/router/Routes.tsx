@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import Navbar from '../components/Navbar/Navbar';
 import CreateGist from '../pages/Gist/CreateGist';
 import EditGist from '../pages/Gist/EditGist';
@@ -7,24 +7,26 @@ import Gist from '../pages/Gist/Gists';
 import SingleGist from '../pages/Gist/SingleGist';
 import OAuth from '../pages/OAuth/OAuth';
 import Profile from '../pages/User/Profile';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
+import { URLS } from './urls';
 
 const Routes: React.FC = () => {
+
     return (
         <React.Fragment>
             <Navbar />
 
             <Switch>
-                <Route exact path="/" render={() => <Gist />} />
+                {/* Public Routes */}
+                <PublicRoute exact path={URLS.Default} component={Gist} />
+                <PublicRoute exact path={URLS.OAuth} component={OAuth} />
 
-                <Route exact path="/gist/:id" component={SingleGist} />
-
-                <Route exact path="/create" render={() => <CreateGist />} />
-
-                <Route exact path="/edit/:id" component={EditGist} />
-
-                <Route exact path="/oauth" render={() => <OAuth />} />
-
-                <Route exact path="/user/gists" render={() => <Profile />} />
+                {/* Private Routes */}
+                <PrivateRoute exact path={URLS.SingleGist} component={SingleGist} />
+                <PrivateRoute exact path={URLS.CreateGist} component={CreateGist} />
+                <PrivateRoute exact path={URLS.EditGist} component={EditGist} />
+                <PrivateRoute exact path={URLS.UserGists} component={Profile} />
             </Switch>
         </React.Fragment>
     );

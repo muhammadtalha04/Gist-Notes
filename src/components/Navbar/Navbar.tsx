@@ -11,6 +11,7 @@ import { Colors } from '../../constants/colors';
 import { useAuthContext } from '../../context/AuthContext';
 import { AUTH_ACTION_TYPES } from '../../constants/action_types';
 import Image from '../Image/Image';
+import { URLS } from '../../router/urls';
 
 const Navbar: React.FC = () => {
     const clientId = getClientId();
@@ -22,7 +23,7 @@ const Navbar: React.FC = () => {
     const history = useHistory();
 
     const addNewGist = useCallback(() => {
-        history.push('/create');
+        history.push(URLS.CreateGist);
     }, [history]);
 
     const viewProfile = useCallback(() => {
@@ -30,7 +31,7 @@ const Navbar: React.FC = () => {
     }, [state.html_url]);
 
     const viewUserGists = useCallback(() => {
-        history.push('/user/gists');
+        history.push(URLS.UserGists);
     }, [history]);
 
     const handleSearch = useCallback(() => {
@@ -45,11 +46,11 @@ const Navbar: React.FC = () => {
     const handleLogout = useCallback(() => {
         userDispatch({ type: "LOGOUT", payload: {} })
         authDispatch({ type: AUTH_ACTION_TYPES.LOGOUT, payload: {} })
-        history.push('/');
+        history.push(URLS.Default);
     }, [authDispatch, userDispatch, history]);
 
     const handleNavToHome = useCallback(() => {
-        history.push('/');
+        history.push(URLS.Default);
     }, [history]);
 
     const handleToggleDropdown = useCallback(() => {

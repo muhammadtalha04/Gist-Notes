@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import Form from '../../components/Form/Form';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
 import { useAuthContext } from '../../context/AuthContext';
 import { useGistContext } from '../../context/GistContext';
+import { URLS } from '../../router/urls';
 import { createNewGist } from '../../utils';
 import { GistPost } from '../../utils/types';
 import { Div } from './Style';
@@ -57,11 +58,9 @@ const CreateGist: React.FC = () => {
 
                         alert("Gist created successfully");
 
-                        history.push('/');
+                        history.push(URLS.Default);
                     }
                 });
-            } else {
-                history.push('/');
             }
         } else {
             alert("Filename and content are required");
@@ -69,14 +68,8 @@ const CreateGist: React.FC = () => {
     }, [fileName, description, content, history, gistDispatch, authState]);
 
     const handleCancelButton = useCallback(() => {
-        history.push('/');
+        history.push(URLS.Default);
     }, [history]);
-
-    useEffect(() => {
-        if (authState.token === null) {
-            history.push('/');
-        }
-    }, [authState, history]);
 
     return (
         <Div className="container mt-5 mb-5">

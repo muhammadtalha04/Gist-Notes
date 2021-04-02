@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import Form from '../../components/Form/Form';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
 import { useAuthContext } from '../../context/AuthContext';
 import { useGistContext } from '../../context/GistContext';
+import { URLS } from '../../router/urls';
 import { getGist, updateGist } from '../../utils';
 import { GistPost } from '../../utils/types';
 import { Div } from './Style';
@@ -13,7 +14,7 @@ interface Params {
     id: string;
 }
 
-const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
+const EditGist: React.FC = () => {
     const fileNameRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLInputElement>(null);
     const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -21,6 +22,7 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
     const [description, setDescription] = useState("");
     const [content, setContent] = useState("");
     const history = useHistory();
+    const match = useRouteMatch<Params>(URLS.EditGist);
     const { gistDispatch } = useGistContext();
     const { authState } = useAuthContext();
 
@@ -54,28 +56,28 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                 content: content
             };
 
-            if (authState.token != null) {
+            if (authState.token != null && match !== null) {
                 gistDispatch({ type: GIST_ACTION_TYPES.EDIT_GIST, payload: { data: data, id: match.params.id } });
 
                 updateGist(authState.token, data, match.params.id).then((data) => {
                     if (data !== null) {
                         alert("Gist updated successfully");
 
-                        history.push('/');
+                        history.push(URLS.Default);
                     }
                 });
             }
         } else {
             alert("Filename and content are required");
         }
-    }, [fileName, description, content, history, match.params.id, gistDispatch, authState]);
+    }, [fileName, description, content, history, match, gistDispatch, authState]);
 
     const handleCancelButton = useCallback(() => {
-        history.push('/');
+        history.push(URLS.Default);
     }, [history]);
 
     useEffect(() => {
-        if (authState.token !== null) {
+        if (authState.token !== null && match !== null) {
             getGist(match.params.id, authState.token).then((data) => {
                 if (data) {
                     const dataFileName = Object.keys(data['files'])[0];
@@ -85,10 +87,8 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                     setContent(data['files'][dataFileName]['content']);
                 }
             });
-        } else {
-            history.push('/');
         }
-    }, [match.params.id, authState, history]);
+    }, [match, authState]);
 
     return (
         <Div className="container mt-5 mb-5">
