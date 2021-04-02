@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { RouteComponentProps, useHistory } from 'react-router';
-import Card from '../../components/Card/Card';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import Form from '../../components/Form/Form';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
 import { useAuthContext } from '../../context/AuthContext';
@@ -48,7 +48,7 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
                 files: {
                 },
                 description: description,
-                public: false
+                public: true
             };
             data.files[fileName] = {
                 content: content
@@ -92,7 +92,7 @@ const EditGist: React.FC<RouteComponentProps<Params>> = ({ match }) => {
 
     return (
         <Div className="container mt-5 mb-5">
-            <Card
+            <Form
                 fileName={fileName}
                 description={description}
                 content={content}

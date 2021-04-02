@@ -7,6 +7,7 @@ const Headings = {
     Logout: "Sign out",
     CreateGist: "Create new gist",
     EditGist: "Edit gist",
+    ViewProfile: "View Github Profile"
 };
 
 export default Headings;

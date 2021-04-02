@@ -12,8 +12,9 @@ const initialState = {
         name: "",
         login: "",
         id: 0,
-        avatar: "",
+        avatar_url: "",
         url: "",
+        html_url: ""
     },
     userDispatch: () => undefined
 };

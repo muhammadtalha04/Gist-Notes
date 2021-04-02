@@ -3,21 +3,35 @@ import { useHistory } from 'react-router-dom';
 import Headings from '../../constants/headings';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
-import { Div, Nav, RightDiv } from './Style';
+import { Div, Nav, DropdownButton, DropdownWrapper, RightDiv, Dropdown, DropdownItem, Bold, HR, DropdownItemHover } from './Style';
 import { getClientId } from '../../utils';
 import { useUserContext } from '../../context/UserContext';
 import Text from '../Text/Text';
 import { Colors } from '../../constants/colors';
 import { useAuthContext } from '../../context/AuthContext';
 import { AUTH_ACTION_TYPES } from '../../constants/action_types';
+import Image from '../Image/Image';
 
 const Navbar: React.FC = () => {
     const clientId = getClientId();
     const [search, changeSearch] = useState("");
+    const [open, setOpen] = useState(false);
     const searchRef = useRef<HTMLInputElement>(null);
-    const { userDispatch } = useUserContext();
+    const { state, userDispatch } = useUserContext();
     const { authState, authDispatch } = useAuthContext();
     const history = useHistory();
+
+    const addNewGist = useCallback(() => {
+        history.push('/create');
+    }, [history]);
+
+    const viewProfile = useCallback(() => {
+        window.location.href = state.html_url;
+    }, [state.html_url]);
+
+    const viewUserGists = useCallback(() => {
+        history.push('/user/gists');
+    }, [history]);
 
     const handleSearch = useCallback(() => {
         changeSearch(searchRef.current!.value);
@@ -38,15 +52,56 @@ const Navbar: React.FC = () => {
         history.push('/');
     }, [history]);
 
+    const handleToggleDropdown = useCallback(() => {
+        setOpen(!open);
+    }, [open]);
+
     return (
         <Nav className="navbar navbar-expand-sm bg-dark navbar-dark">
-            <Div className="container">
+            <Div className="container-fluid">
                 <Text text={Headings.TITLE} fontWeight="600" color={Colors.PRIMARY.color} classN="navbar-brand" fontSize="16" handleClick={handleNavToHome} />
 
                 <RightDiv>
                     <Input reference={searchRef} value={search} handleInputChange={handleSearch} placeholder={Headings.SearchBoxPlaceholder} />
 
-                    {(authState.loggedIn) ? (<Button onClickHandle={handleLogout} text={Headings.Logout} />) : (<Button onClickHandle={handleLogin} text={Headings.Login} />)}
+                    {
+                        (authState.loggedIn) ?
+                            (
+                                <DropdownWrapper className="dropdown">
+                                    <DropdownButton onClick={handleToggleDropdown}>
+                                        <Image source={state.avatar_url} altText={state.name} profile={"false"} />
+                                    </DropdownButton>
+
+                                    {
+                                        open && (
+                                            <Dropdown>
+                                                <DropdownItem>
+                                                    Signed in as <Bold>{(state.login.length > 12) ? state.login.substring(0, 12) + "..." : state.login}</Bold>
+                                                </DropdownItem>
+
+                                                <HR />
+
+                                                <DropdownItemHover onClick={viewUserGists}>Your gists</DropdownItemHover>
+
+                                                <DropdownItemHover>Starred gists</DropdownItemHover>
+
+                                                <DropdownItemHover onClick={addNewGist}>Create new gist</DropdownItemHover>
+
+                                                <HR />
+
+                                                <DropdownItemHover onClick={viewProfile}>Your github profile</DropdownItemHover>
+
+                                                <HR />
+
+                                                <DropdownItemHover onClick={handleLogout}>Sign out</DropdownItemHover>
+
+                                            </Dropdown>
+                                        )
+                                    }
+                                </DropdownWrapper>
+                            ) :
+                            (<Button onClickHandle={handleLogin} text={Headings.Login} />)
+                    }
                 </RightDiv>
             </Div>
         </Nav>

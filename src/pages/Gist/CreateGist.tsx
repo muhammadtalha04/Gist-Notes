@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
-import Card from '../../components/Card/Card';
+import Form from '../../components/Form/Form';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
 import { useAuthContext } from '../../context/AuthContext';
@@ -44,7 +44,7 @@ const CreateGist: React.FC = () => {
                 files: {
                 },
                 description: description,
-                public: false
+                public: true
             };
             data.files[fileName] = {
                 content: content
@@ -80,7 +80,7 @@ const CreateGist: React.FC = () => {
 
     return (
         <Div className="container mt-5 mb-5">
-            <Card
+            <Form
                 fileName={fileName}
                 description={description}
                 content={content}

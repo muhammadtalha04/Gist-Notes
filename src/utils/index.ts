@@ -1,20 +1,15 @@
-import { API_OPTIONS, Gist, GistPost } from "./types";
+import { Gist, GistPost } from "./types";
 
 const GITHUB_API_URL = 'https://api.github.com';
 
 // This function takes url and options as parameters and calls the api using fetch function and returns the output from the server.
-const fetchData = (url: string, options?: object) => {
-    let method: string | undefined = undefined;
-
+const fetchData = (url: string, options?: object, asJson?: boolean) => {
     if (options === undefined) {
         options = {};
-    } else {
-        const tmpOpt: API_OPTIONS = options as API_OPTIONS;
-        method = tmpOpt['method'];
     }
 
     return fetch(url, options).then(x => {
-        return (method !== undefined && method.toLowerCase() === "delete") ? x : x.json();
+        return (asJson !== undefined && asJson === false) ? x : x.json();
     }).then(y => {
         // console.log("Response");
         return y;
@@ -29,6 +24,13 @@ const fetchData = (url: string, options?: object) => {
 */
 export const removeGist = (id: string, payload: Gist[]) => {
     return payload.filter((gist) => gist.id !== id);
+}
+
+/*
+    This function searches the record whose id matches with the given id from the data.
+*/
+export const searchGist = (id: string, payload: Gist[]) => {
+    return payload.filter((gist) => gist.id === id);
 }
 
 /*
@@ -64,7 +66,7 @@ export const getUser = (token: string) => {
         }
     };
 
-    return fetchData(url, options);
+    return fetchData(url, options, true);
 }
 
 export const getUserGists = (username: string, token: string) => {
@@ -77,7 +79,20 @@ export const getUserGists = (username: string, token: string) => {
         }
     };
 
-    return fetchData(url, options);
+    return fetchData(url, options, true);
+}
+
+export const getPublicGists = (token: string) => {
+    const url = `${GITHUB_API_URL}/gists/public?per_page=100`;
+    const options = {
+        method: "get",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    return fetchData(url, options, true);
 }
 
 export const getGist = (id: string, token: string) => {
@@ -90,7 +105,7 @@ export const getGist = (id: string, token: string) => {
         }
     };
 
-    return fetchData(url, options);
+    return fetchData(url, options, true);
 }
 
 export const createNewGist = (token: string, payload: GistPost) => {
@@ -104,7 +119,7 @@ export const createNewGist = (token: string, payload: GistPost) => {
         body: JSON.stringify(payload)
     };
 
-    return fetchData(url, options);
+    return fetchData(url, options, true);
 }
 
 export const updateGist = (token: string, payload: GistPost, id: string) => {
@@ -118,7 +133,7 @@ export const updateGist = (token: string, payload: GistPost, id: string) => {
         body: JSON.stringify(payload)
     };
 
-    return fetchData(url, options);
+    return fetchData(url, options, true);
 }
 
 export const deleteGist = (token: string, id: string) => {
@@ -131,5 +146,41 @@ export const deleteGist = (token: string, id: string) => {
         }
     };
 
-    return fetchData(url, options);
+    return fetchData(url, options, false);
+}
+
+export const forkGist = (token: string, id: string) => {
+    const url = `${GITHUB_API_URL}/gists/${id}/forks`;
+    const options = {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    return fetchData(url, options, true);
+}
+
+export const starGist = (token: string, id: string) => {
+    const url = `${GITHUB_API_URL}/gists/${id}/star`;
+    const options = {
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    return fetchData(url, options, false);
+}
+
+export const getGistData = (id: string, data: Gist[]): Gist | null => {
+    let filteredRecord: Gist[] = data.filter((gist) => gist.id === id);
+
+    return (filteredRecord.length > 0) ? filteredRecord[0] : null;
+}
+
+export const getGistContent = (url: string) => {
+    return fetchData(url, {}, false);
 }

@@ -11,4 +11,5 @@ export const TextElement = styled.p<TextProps>`
     font-weight: ${props => props.fontWeight};
     ${props => (props.fontSize !== undefined && "font-size: " + props.fontSize + "pt")};
     cursor: pointer;
+    margin-bottom: 0px;
 `;

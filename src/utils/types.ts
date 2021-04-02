@@ -2,8 +2,9 @@ export type UserState = {
     name: string;
     id: number;
     login: string;
-    avatar: string;
+    avatar_url: string;
     url: string;
+    html_url: string;
 };
 
 export type Action = {
@@ -11,10 +12,15 @@ export type Action = {
     payload: any;
 };
 
+type GistOwner = {
+    login: string,
+    avatar_url: string,
+}
+
 export type Gist = {
     id: string,
     files: object,
-    owner: object,
+    owner: GistOwner,
     updated_at: string,
     description: string,
 }
