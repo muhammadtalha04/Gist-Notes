@@ -66,7 +66,7 @@ const SingleGist: React.FC = () => {
             if (gistRecord !== null && gist.id === "") {
                 setGist(gistRecord);
             } else if (gistRecord === null) {
-                history.push("/");
+                history.push(URLS.Default);
             }
         }
     }, [gist, match, history, gistState.data, setGist]);

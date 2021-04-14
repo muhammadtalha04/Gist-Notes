@@ -1,43 +1,39 @@
-import React, { ChangeEventHandler, MouseEventHandler, RefObject } from 'react';
+import React, { MouseEventHandler } from 'react';
 import Headings from '../../constants/headings';
+import { useFormContext } from '../../context/FormContext';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import TextArea from '../TextArea/TextArea';
 import { Div, DivBody, DivHeader, OuterDiv } from './Style';
 
 interface FormProps {
-    fileNameRef: RefObject<HTMLInputElement>;
-    descriptionRef: RefObject<HTMLInputElement>;
-    contentRef: RefObject<HTMLTextAreaElement>;
-    fileName: string;
-    description: string;
-    content: string;
-    handleFileNameChange: ChangeEventHandler<HTMLInputElement>;
-    handleDescriptionChange: ChangeEventHandler<HTMLInputElement>;
-    handleContentChange: ChangeEventHandler<HTMLTextAreaElement>;
+    handleFileNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleDescriptionChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleContentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleSaveButton: MouseEventHandler<HTMLButtonElement>;
     handleCancelButton: MouseEventHandler<HTMLButtonElement>;
-    heading: string;
 }
 
-const Form: React.FC<FormProps> = ({ fileName, description, content, fileNameRef, descriptionRef, contentRef, handleFileNameChange, handleDescriptionChange, handleContentChange, handleSaveButton, handleCancelButton, heading }) => {
+const Form: React.FC<FormProps> = ({ handleFileNameChange, handleDescriptionChange, handleContentChange, handleSaveButton, handleCancelButton }) => {
+    const { formState } = useFormContext();
+
     return (
         <OuterDiv className="col-sm-8 offset-md-2">
             <DivHeader>
-                {heading}
+                {formState.heading}
             </DivHeader>
 
             <DivBody>
                 <Div className="form-group">
-                    <Input classN="form-control" reference={fileNameRef} value={fileName} handleInputChange={handleFileNameChange} placeholder={Headings.FileNamePlaceholder} />
+                    <Input classN="form-control" value={formState.fileName} handleInputChange={handleFileNameChange} placeholder={Headings.FileNamePlaceholder} />
                 </Div>
 
                 <Div className="form-group">
-                    <Input classN="form-control" reference={descriptionRef} value={description} handleInputChange={handleDescriptionChange} placeholder={Headings.DescriptionPlaceholder} />
+                    <Input classN="form-control" value={formState.description} handleInputChange={handleDescriptionChange} placeholder={Headings.DescriptionPlaceholder} />
                 </Div>
 
                 <Div className="form-group">
-                    <TextArea classN="form-control" reference={contentRef} value={content} handleChange={handleContentChange} />
+                    <TextArea classN="form-control" value={formState.content} handleChange={handleContentChange} />
                 </Div>
 
                 <Div className="form-group">

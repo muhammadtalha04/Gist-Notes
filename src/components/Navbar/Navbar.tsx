@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Headings from '../../constants/headings';
 import Button from '../Button/Button';
@@ -17,7 +17,6 @@ const Navbar: React.FC = () => {
     const clientId = getClientId();
     const [search, changeSearch] = useState("");
     const [open, setOpen] = useState(false);
-    const searchRef = useRef<HTMLInputElement>(null);
     const { state, userDispatch } = useUserContext();
     const { authState, authDispatch } = useAuthContext();
     const history = useHistory();
@@ -34,9 +33,9 @@ const Navbar: React.FC = () => {
         history.push(URLS.UserGists);
     }, [history]);
 
-    const handleSearch = useCallback(() => {
-        changeSearch(searchRef.current!.value);
-    }, [searchRef]);
+    const handleSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        changeSearch(event.target.value);
+    }, []);
 
     const handleLogin = useCallback(() => {
         const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=gist`;
@@ -63,7 +62,7 @@ const Navbar: React.FC = () => {
                 <Text text={Headings.TITLE} fontWeight="600" color={Colors.PRIMARY.color} classN="navbar-brand" fontSize="16" handleClick={handleNavToHome} />
 
                 <RightDiv>
-                    <Input reference={searchRef} value={search} handleInputChange={handleSearch} placeholder={Headings.SearchBoxPlaceholder} />
+                    <Input value={search} handleInputChange={handleSearch} placeholder={Headings.SearchBoxPlaceholder} />
 
                     {
                         (authState.loggedIn) ?

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Switch } from "react-router-dom";
 import Navbar from '../components/Navbar/Navbar';
-import CreateGist from '../pages/Gist/CreateGist';
-import EditGist from '../pages/Gist/EditGist';
+import GistForm from '../pages/Gist/GistForm';
 import Gist from '../pages/Gist/Gists';
 import SingleGist from '../pages/Gist/SingleGist';
 import OAuth from '../pages/OAuth/OAuth';
@@ -24,8 +23,8 @@ const Routes: React.FC = () => {
 
                 {/* Private Routes */}
                 <PrivateRoute exact path={URLS.SingleGist} component={SingleGist} />
-                <PrivateRoute exact path={URLS.CreateGist} component={CreateGist} />
-                <PrivateRoute exact path={URLS.EditGist} component={EditGist} />
+                <PrivateRoute exact path={URLS.CreateGist} component={GistForm} />
+                <PrivateRoute exact path={URLS.EditGist} component={GistForm} />
                 <PrivateRoute exact path={URLS.UserGists} component={Profile} />
             </Switch>
         </React.Fragment>

@@ -1,16 +1,15 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 import { TextAreaElement } from './Style';
 
 interface TextAreaProps {
     classN?: string;
-    reference: RefObject<HTMLTextAreaElement>;
     value: string;
-    handleChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+    handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const TextArea: React.FC<TextAreaProps> = ({ classN, reference, value, handleChange }) => {
+const TextArea: React.FC<TextAreaProps> = ({ classN, value, handleChange }) => {
     return (
-        <TextAreaElement ref={reference} className={classN} rows={10} onChange={handleChange} value={value} />
+        <TextAreaElement className={classN} rows={10} onChange={handleChange} value={value} />
     );
 }
 

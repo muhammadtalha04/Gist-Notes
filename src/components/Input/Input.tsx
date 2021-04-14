@@ -1,17 +1,16 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 import { InputElement } from './Style';
 
 interface InputProps {
-    reference: RefObject<HTMLInputElement>;
-    handleInputChange: React.ChangeEventHandler<HTMLInputElement>;
+    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     value: string;
     placeholder: string;
     classN?: string;
 }
 
-const Input: React.FC<InputProps> = ({ value, reference, handleInputChange, placeholder, classN }) => {
+const Input: React.FC<InputProps> = ({ value, handleInputChange, placeholder, classN }) => {
     return (
-        <InputElement className={classN} ref={reference} type="text" value={value} onChange={handleInputChange} placeholder={placeholder} />
+        <InputElement className={classN} type="text" value={value} onChange={handleInputChange} placeholder={placeholder} />
     );
 }
 
