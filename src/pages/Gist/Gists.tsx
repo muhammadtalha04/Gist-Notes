@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import Card from '../../components/Card/Card';
+import GridView from '../../components/GridView/GridView';
 import Icon from '../../components/Icon/Icon';
+import Pagination from '../../components/Pagination/Pagination';
 import Table from '../../components/Table/Table';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import { useAuthContext } from '../../context/AuthContext';
@@ -98,9 +99,6 @@ const Gist: React.FC = () => {
 
         if (login !== undefined && login !== null) {
             if (authState.token !== null) {
-                // getUserGists(login, authState.token).then((data) => {
-                //     gistDispatch({ type: GIST_ACTION_TYPES.SET_GISTS, payload: data });
-                // });
                 getPublicGists(authState.token).then((data) => {
                     gistDispatch({ type: GIST_ACTION_TYPES.SET_GISTS, payload: data });
                 });
@@ -131,35 +129,23 @@ const Gist: React.FC = () => {
                     )
                     :
                     (
-                        <Div className="row mt-3">
-                            {
-                                gists.map((gist) => {
-                                    return (
-                                        <Div className="col-sm-3 mb-5" key={gist.id} onClick={() => handleGistView(gist.id)}>
-                                            <Card
-                                                gist={gist}
-                                                singleGist={false}
-                                                handleGistEdit={handleGistEdit}
-                                                handleGistDelete={handleGistDelete}
-                                                handleGistStar={handleGistStar}
-                                                handleGistFork={handleGistFork}
-                                            />
-                                        </Div>
-                                    )
-                                })
-                            }
-                        </Div>
+                        <GridView
+                            gists={gists}
+                            handleGistEdit={handleGistEdit}
+                            handleGistDelete={handleGistDelete}
+                            handleGistFork={handleGistFork}
+                            handleGistStar={handleGistStar}
+                            handleGistView={handleGistView}
+                        />
                     )
             }
 
-
-            <Div className="text-center mt-2">
-                <Icon simple={false} icon="fa fa-arrow-left" fontSize={9} title="Previous Page" handleClick={handlePrevPage} />
-                {
-                    pageNum + " of " + ((lastPage > 0) ? lastPage : "1")
-                }
-                <Icon simple={false} icon="fa fa-arrow-right" fontSize={9} title="Next Page" handleClick={handleNextPage} />
-            </Div>
+            <Pagination
+                pageNum={pageNum}
+                lastPage={lastPage}
+                onClickPrevPage={handlePrevPage}
+                onClickNextPage={handleNextPage}
+            />
         </Container>
     );
 }

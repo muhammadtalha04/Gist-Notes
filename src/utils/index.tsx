@@ -1,4 +1,6 @@
-import { Gist, GistPost } from "./types";
+import Card from '../components/Card/Card';
+import { Div } from '../components/GridView/Style';
+import { Gist, GistPost, HandleIDFunc } from "./types";
 
 const GITHUB_API_URL = 'https://api.github.com';
 
@@ -183,4 +185,21 @@ export const getGistData = (id: string, data: Gist[]): Gist | null => {
 
 export const getGistContent = (url: string) => {
     return fetchData(url, {}, false);
+}
+
+export const generateCardsGrid = (gists: Gist[], handleGistView: HandleIDFunc, handleGistEdit: HandleIDFunc, handleGistDelete: HandleIDFunc, handleGistStar: HandleIDFunc, handleGistFork: HandleIDFunc) => {
+    return gists.map((gist) => {
+        return (
+            <Div className="col-sm-3 mb-5" key={gist.id} onClick={() => handleGistView(gist.id)}>
+                <Card
+                    gist={gist}
+                    singleGist={false}
+                    handleGistEdit={handleGistEdit}
+                    handleGistDelete={handleGistDelete}
+                    handleGistStar={handleGistStar}
+                    handleGistFork={handleGistFork}
+                />
+            </Div>
+        )
+    });
 }

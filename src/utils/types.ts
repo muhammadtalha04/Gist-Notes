@@ -63,3 +63,5 @@ export const FormActionTypes = {
     SET_CONTENT: "SET_CONTENT",
     SET_HEADING: "SET_HEADING",
 }
+
+export type HandleIDFunc = (id: string) => void;
