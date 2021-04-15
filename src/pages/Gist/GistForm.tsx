@@ -4,11 +4,13 @@ import Form from '../../components/Form/Form';
 import { FormActionTypes, GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
 import { URLS } from '../../router/urls';
-import { createNewGist, getGist, updateGist } from '../../utils';
+import { createNewGist, updateGist } from '../../utils';
 import { GistPost, Params } from '../../utils/types';
 import { Div } from './Style';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import EditGist from './EditGist';
+import CreateGist from './CreateGist';
 
 const GistForm: React.FC = () => {
     const isCreate = useRouteMatch(URLS.CreateGist);
@@ -42,7 +44,6 @@ const GistForm: React.FC = () => {
 
     // This function is triggered when user clicks the cancel button
     const handleCancelButton = useCallback(() => {
-        // history.push(URLS.Default);
         history.goBack();
     }, [history]);
     // -------------------------------------------------
@@ -68,7 +69,8 @@ const GistForm: React.FC = () => {
 
                             alert("Gist created successfully");
 
-                            history.push(URLS.Default);
+                            dispatch({ type: FormActionTypes.CLEAR_FORM });
+                            history.goBack();
                         }
                     });
                 } else if (isEdit !== null) {
@@ -78,7 +80,8 @@ const GistForm: React.FC = () => {
                         if (data !== null) {
                             alert("Gist updated successfully");
 
-                            history.push(URLS.Default);
+                            dispatch({ type: FormActionTypes.CLEAR_FORM });
+                            history.goBack();
                         }
                     });
                 }
@@ -90,20 +93,7 @@ const GistForm: React.FC = () => {
     // -------------------------------------------------
 
     useEffect(() => {
-        if (token !== null && isEdit !== null && formState.fileName === "") {
-            getGist(isEdit.params.id, token).then((data) => {
-                if (data) {
-                    const dataFileName = Object.keys(data['files'])[0];
-
-                    dispatch({ type: FormActionTypes.SET_FILE_NAME, payload: { fileName: dataFileName } });
-                    dispatch({ type: FormActionTypes.SET_DESCRIPTION, payload: { description: data['description'] } });
-                    dispatch({ type: FormActionTypes.SET_CONTENT, payload: { content: data['files'][dataFileName]['content'] } });
-                }
-            });
-        }
-    }, [token, isEdit, formState.fileName, dispatch]);
-
-    useEffect(() => {
+        dispatch({ type: FormActionTypes.CLEAR_FORM });
         if (isEdit !== null) {
             dispatch({ type: FormActionTypes.SET_HEADING, payload: { heading: Headings.EditGist } });
         } else if (isCreate !== null) {
@@ -113,15 +103,35 @@ const GistForm: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <Div className="container mt-5 mb-5">
-            <Form
-                handleFileNameChange={handleFileNameChange}
-                handleDescriptionChange={handleDescriptionChange}
-                handleContentChange={handleContentChange}
-                handleSaveButton={handleSaveButton}
-                handleCancelButton={handleCancelButton}
-            />
-        </Div>
+        <React.Fragment>
+            {
+                (isCreate !== null) &&
+                (
+                    <CreateGist
+                        handleFileNameChange={handleFileNameChange}
+                        handleDescriptionChange={handleDescriptionChange}
+                        handleContentChange={handleContentChange}
+                        handleSaveButton={handleSaveButton}
+                        handleCancelButton={handleCancelButton}
+                    />
+                )
+            }
+            {
+                (isEdit !== null) &&
+                (
+                    <EditGist
+                        match={isEdit}
+                        handleFileNameChange={handleFileNameChange}
+                        handleDescriptionChange={handleDescriptionChange}
+                        handleContentChange={handleContentChange}
+                        handleSaveButton={handleSaveButton}
+                        handleCancelButton={handleCancelButton}
+                    />
+                )
+            }
+        </React.Fragment>
+
+
     );
 }
 

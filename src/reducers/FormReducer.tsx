@@ -22,6 +22,14 @@ export const formReducer = (state: FormState = initState, action: Action) => {
         case FormActionTypes.SET_HEADING:
             return { ...state, heading: action.payload.heading };
 
+        case FormActionTypes.CLEAR_FORM:
+            return {
+                ...state,
+                fileName: "",
+                description: "",
+                content: "",
+            };
+
         default:
             return { ...state };
     }

@@ -22,4 +22,5 @@ export const FormActionTypes = {
     SET_DESCRIPTION: "SET_DESCRIPTION",
     SET_CONTENT: "SET_CONTENT",
     SET_HEADING: "SET_HEADING",
+    CLEAR_FORM: "CLEAR_FORM"
 }
