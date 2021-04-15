@@ -2,7 +2,11 @@ import { GIST_ACTION_TYPES } from "../constants/action_types";
 import { editGistData, removeGist, searchGist } from "../utils";
 import { Action, GistState } from "../utils/types";
 
-export const GistReducer = (state: GistState, action: Action) => {
+const initState = {
+    data: []
+};
+
+export const GistReducer = (state: GistState = initState, action: Action) => {
     switch (action.type) {
         case GIST_ACTION_TYPES.SET_GISTS:
             console.log("Fetch gists");

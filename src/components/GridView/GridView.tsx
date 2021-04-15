@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { generateCardsGrid } from '../../utils';
 import { Gist } from '../../utils/types';
-import Card from '../Card/Card';
 import { Div } from './Style';
 
 interface GridViewProps {

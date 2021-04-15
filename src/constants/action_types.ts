@@ -7,12 +7,19 @@ export const GIST_ACTION_TYPES = {
 };
 
 export const USER_ACTION_TYPES = {
-    LOGIN: "LOGIN",
-    LOGOUT: "LOGOUT",
+    LOGIN: "SET_USER",
+    LOGOUT: "DESTROY_USER",
     CURRENT_USER: "CURRENT_USER"
 }
 
 export const AUTH_ACTION_TYPES = {
     LOGIN: "LOGIN",
     LOGOUT: "LOGOUT",
+}
+
+export const FormActionTypes = {
+    SET_FILE_NAME: "SET_FILE_NAME",
+    SET_DESCRIPTION: "SET_DESCRIPTION",
+    SET_CONTENT: "SET_CONTENT",
+    SET_HEADING: "SET_HEADING",
 }

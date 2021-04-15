@@ -1,6 +1,14 @@
-import { Action, FormState, FormActionTypes } from '../utils/types';
+import { FormActionTypes } from '../constants/action_types';
+import { Action, FormState } from '../utils/types';
 
-export const formReducer = (state: FormState, action: Action) => {
+const initState = {
+    fileName: "",
+    description: "",
+    content: "",
+    heading: ""
+};
+
+export const formReducer = (state: FormState = initState, action: Action) => {
     switch (action.type) {
         case FormActionTypes.SET_FILE_NAME:
             return { ...state, fileName: action.payload.fileName };

@@ -7,22 +7,27 @@ import Text from '../../components/Text/Text';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import { Colors } from '../../constants/colors';
 import Headings from '../../constants/headings';
-import { useAuthContext } from '../../context/AuthContext';
-import { useGistContext } from '../../context/GistContext';
-import { useUserContext } from '../../context/UserContext';
 import { deleteGist, forkGist, getUserGists, starGist } from '../../utils';
 import { Div, GistsDiv, UserDetailsDiv } from './Style';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { Gist } from '../../utils/types';
 
 const Profile: React.FC = () => {
     const [loading, setLoading] = useState(true);
-    const { state } = useUserContext();
-    const { authState } = useAuthContext();
-    const { gistState, gistDispatch } = useGistContext();
     const history = useHistory();
 
+    const dispatch = useDispatch();
+    const [authState, userState, gistState] = useSelector((state: RootState) => [
+        state.auth,
+        state.user,
+        state.gist
+    ]);
+
+
     const viewProfile = useCallback(() => {
-        window.location.href = state.html_url;
-    }, [state.html_url]);
+        window.location.href = userState.html_url;
+    }, [userState.html_url]);
 
     const handleGistEdit = useCallback((id: string) => {
         history.push(`/edit/${id}`);
@@ -32,7 +37,7 @@ const Profile: React.FC = () => {
         if (authState.token !== null) {
             deleteGist(authState.token, id).then((response) => {
                 if (response['status'] === 200 || response['status'] === 204) {
-                    gistDispatch({ type: GIST_ACTION_TYPES.DELETE_GIST, payload: { id: id } });
+                    dispatch({ type: GIST_ACTION_TYPES.DELETE_GIST, payload: { id: id } });
 
                     alert('Gist deleted successfully');
                 }
@@ -40,7 +45,7 @@ const Profile: React.FC = () => {
                 console.log(error);
             });
         }
-    }, [gistDispatch, authState]);
+    }, [dispatch, authState]);
 
     const handleGistStar = useCallback((id: string) => {
         if (authState.token !== null) {
@@ -55,20 +60,20 @@ const Profile: React.FC = () => {
         if (authState.token !== null) {
             forkGist(authState.token, id).then((data) => {
                 // console.log(data);
-                gistDispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data });
+                dispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data });
                 alert('Gist forked successfully');
             });
         }
-    }, [authState, gistDispatch]);
+    }, [authState, dispatch]);
 
     useEffect(() => {
         if (authState.token !== null) {
-            getUserGists(state.login, authState.token).then((data) => {
-                gistDispatch({ type: GIST_ACTION_TYPES.SET_GISTS, payload: data });
+            getUserGists(userState.login, authState.token).then((data) => {
+                dispatch({ type: GIST_ACTION_TYPES.SET_GISTS, payload: data });
                 setLoading(false);
             });
         }
-    }, [authState.token, state.login, gistDispatch, setLoading]);
+    }, [authState.token, userState.login, dispatch, setLoading]);
 
     return (
         <Div className="container mt-5 mb-5">
@@ -76,15 +81,15 @@ const Profile: React.FC = () => {
                 <UserDetailsDiv className="col-sm-5 text-center">
                     <Div>
                         <Image
-                            source={state.avatar_url}
+                            source={userState.avatar_url}
                             profile={"true"}
-                            altText={state.name}
+                            altText={userState.name}
                         />
                     </Div>
 
                     <Div className="mt-4">
                         <Text
-                            text={state.name}
+                            text={userState.name}
                             fontWeight={"normal"}
                             color={Colors.SECONDARY.color}
                             fontSize={"16"}
@@ -98,7 +103,7 @@ const Profile: React.FC = () => {
 
                 <GistsDiv className="col-sm-7">
                     {
-                        !loading && gistState.data.map((gist) => {
+                        !loading && gistState.data.map((gist: Gist) => {
                             return (
                                 <Card
                                     key={gist.id}

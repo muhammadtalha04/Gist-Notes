@@ -57,11 +57,4 @@ export interface FormState {
     heading: string;
 }
 
-export const FormActionTypes = {
-    SET_FILE_NAME: "SET_FILE_NAME",
-    SET_DESCRIPTION: "SET_DESCRIPTION",
-    SET_CONTENT: "SET_CONTENT",
-    SET_HEADING: "SET_HEADING",
-}
-
 export type HandleIDFunc = (id: string) => void;

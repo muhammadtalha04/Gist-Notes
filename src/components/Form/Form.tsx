@@ -1,10 +1,11 @@
 import React, { MouseEventHandler } from 'react';
 import Headings from '../../constants/headings';
-import { useFormContext } from '../../context/FormContext';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import TextArea from '../TextArea/TextArea';
 import { Div, DivBody, DivHeader, OuterDiv } from './Style';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 interface FormProps {
     handleFileNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,7 +16,7 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ handleFileNameChange, handleDescriptionChange, handleContentChange, handleSaveButton, handleCancelButton }) => {
-    const { formState } = useFormContext();
+    const formState = useSelector((state: RootState) => state.form);
 
     return (
         <OuterDiv className="col-sm-8 offset-md-2">

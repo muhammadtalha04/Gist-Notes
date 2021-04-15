@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Colors } from '../../constants/colors';
-import { useUserContext } from '../../context/UserContext';
 import { getGistContent } from '../../utils';
 import { Gist } from '../../utils/types';
 import Icon from '../Icon/Icon';
 import Text from '../Text/Text';
 import { CODE, ContentWrapper, FileContentWrapper, FileNameWrapper, GistDetails, PRE, Span, UserDetailsWrapper } from './Style';
 import UserDetails from './UserDetails';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 interface CardProps {
     gist: Gist;
@@ -20,7 +21,8 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ gist, singleGist, handleGistEdit, handleGistDelete, handleGistStar, handleGistFork }) => {
     const [fileName, setFileName] = useState("");
     const [content, setContent] = useState([]);
-    const { state } = useUserContext();
+
+    const userState = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         const fName = Object.keys(gist.files)[0];
@@ -55,7 +57,7 @@ const Card: React.FC<CardProps> = ({ gist, singleGist, handleGistEdit, handleGis
                         <Span className="col-sm-6 text-right">
                             <Icon icon="fa fa-star-o" simple={true} fontSize={11} title="" text="Star" color={Colors.MISC.blue} handleClick={() => handleGistStar(gist.id)} />
                             {
-                                (gist.owner.login !== state.login) ?
+                                (gist.owner.login !== userState.login) ?
                                     (
                                         <Icon icon="fa fa-code-fork" simple={true} fontSize={11} title="" text="Fork" color={Colors.MISC.blue} handleClick={() => handleGistFork(gist.id)} />
                                     ) :

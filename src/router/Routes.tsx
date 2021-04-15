@@ -11,7 +11,6 @@ import PublicRoute from './PublicRoute';
 import { URLS } from './urls';
 
 const Routes: React.FC = () => {
-
     return (
         <React.Fragment>
             <Navbar />

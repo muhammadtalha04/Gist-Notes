@@ -1,7 +1,8 @@
 import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import { useAuthContext } from '../context/AuthContext';
 import { URLS } from './urls';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 interface PrivateRouteProps extends RouteProps {
     component: React.FC;
@@ -9,10 +10,10 @@ interface PrivateRouteProps extends RouteProps {
 
 const PrivateRoute = (props: PrivateRouteProps): React.ReactElement => {
     const { component: Component, ...rest } = props;
-    const { authState } = useAuthContext();
+    const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
 
     const render = (props: PrivateRouteProps) => {
-        return (!authState.loggedIn) ?
+        return (!loggedIn) ?
             (<Redirect to={URLS.Default} />) :
             (<Component {...props} />)
     }

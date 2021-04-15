@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
 import Form from '../../components/Form/Form';
-import { GIST_ACTION_TYPES } from '../../constants/action_types';
+import { FormActionTypes, GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
-import { useAuthContext } from '../../context/AuthContext';
-import { useFormContext } from '../../context/FormContext';
-import { useGistContext } from '../../context/GistContext';
 import { URLS } from '../../router/urls';
 import { createNewGist, getGist, updateGist } from '../../utils';
-import { FormActionTypes, GistPost, Params } from '../../utils/types';
+import { GistPost, Params } from '../../utils/types';
 import { Div } from './Style';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const GistForm: React.FC = () => {
     const isCreate = useRouteMatch(URLS.CreateGist);
@@ -17,26 +16,28 @@ const GistForm: React.FC = () => {
 
     const history = useHistory();
 
-    const { gistDispatch } = useGistContext();
-    const { authState } = useAuthContext();
-    const { formState, formDispatch } = useFormContext();
+    const dispatch = useDispatch();
+    const [formState, token] = useSelector((state: RootState) => [
+        state.form,
+        state.auth.token
+    ]);
 
     // This function is triggered on file name change
     const handleFileNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        formDispatch({ type: FormActionTypes.SET_FILE_NAME, payload: { fileName: event.target.value } });
-    }, [formDispatch]);
+        dispatch({ type: FormActionTypes.SET_FILE_NAME, payload: { fileName: event.target.value } });
+    }, [dispatch]);
     // -------------------------------------------------
 
     // This function is triggered on description change
     const handleDescriptionChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        formDispatch({ type: FormActionTypes.SET_DESCRIPTION, payload: { description: event.target.value } });
-    }, [formDispatch]);
+        dispatch({ type: FormActionTypes.SET_DESCRIPTION, payload: { description: event.target.value } });
+    }, [dispatch]);
     // -------------------------------------------------
 
     // This function is triggered on content change
     const handleContentChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        formDispatch({ type: FormActionTypes.SET_CONTENT, payload: { content: event.target.value } });
-    }, [formDispatch]);
+        dispatch({ type: FormActionTypes.SET_CONTENT, payload: { content: event.target.value } });
+    }, [dispatch]);
     // -------------------------------------------------
 
     // This function is triggered when user clicks the cancel button
@@ -59,11 +60,11 @@ const GistForm: React.FC = () => {
                 content: formState.content
             };
 
-            if (authState.token != null) {
+            if (token != null) {
                 if (isCreate !== null) {
-                    createNewGist(authState.token, data).then((data) => {
+                    createNewGist(token, data).then((data) => {
                         if (data !== null) {
-                            gistDispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data })
+                            dispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data })
 
                             alert("Gist created successfully");
 
@@ -71,9 +72,9 @@ const GistForm: React.FC = () => {
                         }
                     });
                 } else if (isEdit !== null) {
-                    gistDispatch({ type: GIST_ACTION_TYPES.EDIT_GIST, payload: { data: data, id: isEdit.params.id } });
+                    dispatch({ type: GIST_ACTION_TYPES.EDIT_GIST, payload: { data: data, id: isEdit.params.id } });
 
-                    updateGist(authState.token, data, isEdit.params.id).then((data) => {
+                    updateGist(token, data, isEdit.params.id).then((data) => {
                         if (data !== null) {
                             alert("Gist updated successfully");
 
@@ -85,31 +86,31 @@ const GistForm: React.FC = () => {
         } else {
             alert("Filename and content are required");
         }
-    }, [formState, history, gistDispatch, authState, isCreate, isEdit]);
+    }, [formState, history, dispatch, token, isCreate, isEdit]);
     // -------------------------------------------------
 
     useEffect(() => {
-        if (authState.token !== null && isEdit !== null && formState.fileName === "") {
-            getGist(isEdit.params.id, authState.token).then((data) => {
+        if (token !== null && isEdit !== null && formState.fileName === "") {
+            getGist(isEdit.params.id, token).then((data) => {
                 if (data) {
                     const dataFileName = Object.keys(data['files'])[0];
 
-                    formDispatch({ type: FormActionTypes.SET_FILE_NAME, payload: { fileName: dataFileName } });
-                    formDispatch({ type: FormActionTypes.SET_DESCRIPTION, payload: { description: data['description'] } });
-                    formDispatch({ type: FormActionTypes.SET_CONTENT, payload: { content: data['files'][dataFileName]['content'] } });
+                    dispatch({ type: FormActionTypes.SET_FILE_NAME, payload: { fileName: dataFileName } });
+                    dispatch({ type: FormActionTypes.SET_DESCRIPTION, payload: { description: data['description'] } });
+                    dispatch({ type: FormActionTypes.SET_CONTENT, payload: { content: data['files'][dataFileName]['content'] } });
                 }
             });
         }
-    }, [authState, isEdit, formState.fileName, formDispatch]);
+    }, [token, isEdit, formState.fileName, dispatch]);
 
     useEffect(() => {
         if (isEdit !== null) {
-            formDispatch({ type: FormActionTypes.SET_HEADING, payload: { heading: Headings.EditGist } });
+            dispatch({ type: FormActionTypes.SET_HEADING, payload: { heading: Headings.EditGist } });
         } else if (isCreate !== null) {
-            formDispatch({ type: FormActionTypes.SET_HEADING, payload: { heading: Headings.CreateGist } });
+            dispatch({ type: FormActionTypes.SET_HEADING, payload: { heading: Headings.CreateGist } });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formDispatch]);
+    }, [dispatch]);
 
     return (
         <Div className="container mt-5 mb-5">

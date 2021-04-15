@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import Card from '../../components/Card/Card';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
-import { useAuthContext } from '../../context/AuthContext';
-import { useGistContext } from '../../context/GistContext';
 import { URLS } from '../../router/urls';
 import { deleteGist, forkGist, getGistData, starGist } from '../../utils';
 import { Gist } from '../../utils/types';
 import { Div } from './Style';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 interface Params {
     id: string;
@@ -16,20 +16,24 @@ interface Params {
 const SingleGist: React.FC = () => {
     const initGist: Gist = { id: "", files: {}, owner: { login: "", avatar_url: "" }, updated_at: "", description: "" };
     const [gist, setGist] = useState(initGist);
-    const { gistState, gistDispatch } = useGistContext();
-    const { authState } = useAuthContext();
     const history = useHistory();
     const match = useRouteMatch<Params>(URLS.SingleGist);
+
+    const dispatch = useDispatch();
+    const [token, data] = useSelector((state: RootState) => [
+        state.auth.token,
+        state.gist.data
+    ]);
 
     const handleGistEdit = useCallback((id: string) => {
         history.push(`/edit/${id}`);
     }, [history]);
 
     const handleGistDelete = useCallback((id: string) => {
-        if (authState.token !== null) {
-            deleteGist(authState.token, id).then((response) => {
+        if (token !== null) {
+            deleteGist(token, id).then((response) => {
                 if (response['status'] === 200 || response['status'] === 204) {
-                    gistDispatch({ type: GIST_ACTION_TYPES.DELETE_GIST, payload: { id: id } });
+                    dispatch({ type: GIST_ACTION_TYPES.DELETE_GIST, payload: { id: id } });
 
                     alert('Gist deleted successfully');
                 }
@@ -37,31 +41,31 @@ const SingleGist: React.FC = () => {
                 console.log(error);
             });
         }
-    }, [gistDispatch, authState]);
+    }, [token, dispatch]);
 
     const handleGistStar = useCallback((id: string) => {
-        if (authState.token !== null) {
-            starGist(authState.token, id).then((data) => {
+        if (token !== null) {
+            starGist(token, id).then((data) => {
                 // console.log(data);
                 alert('Gist starred successfully');
             });
         }
-    }, [authState]);
+    }, [token]);
 
     const handleGistFork = useCallback((id: string) => {
-        if (authState.token !== null) {
-            forkGist(authState.token, id).then((data) => {
+        if (token !== null) {
+            forkGist(token, id).then((data) => {
                 // console.log(data);
-                gistDispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data });
+                dispatch({ type: GIST_ACTION_TYPES.ADD_GIST, payload: data });
 
                 alert('Gist forked successfully');
             });
         }
-    }, [authState, gistDispatch]);
+    }, [token, dispatch]);
 
     useEffect(() => {
         if (match !== null) {
-            const gistRecord = getGistData(match.params.id, gistState.data);
+            const gistRecord = getGistData(match.params.id, data);
 
             if (gistRecord !== null && gist.id === "") {
                 setGist(gistRecord);
@@ -69,7 +73,7 @@ const SingleGist: React.FC = () => {
                 history.push(URLS.Default);
             }
         }
-    }, [gist, match, history, gistState.data, setGist]);
+    }, [gist, match, history, data, setGist]);
 
     return (
         <Div className="container mt-5 mb-5">

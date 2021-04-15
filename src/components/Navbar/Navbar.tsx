@@ -5,29 +5,36 @@ import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { Div, Nav, DropdownButton, DropdownWrapper, RightDiv, Dropdown, DropdownItem, Bold, HR, DropdownItemHover } from './Style';
 import { getClientId } from '../../utils';
-import { useUserContext } from '../../context/UserContext';
 import Text from '../Text/Text';
 import { Colors } from '../../constants/colors';
-import { useAuthContext } from '../../context/AuthContext';
-import { AUTH_ACTION_TYPES } from '../../constants/action_types';
+import { AUTH_ACTION_TYPES, USER_ACTION_TYPES } from '../../constants/action_types';
 import Image from '../Image/Image';
 import { URLS } from '../../router/urls';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const Navbar: React.FC = () => {
     const clientId = getClientId();
     const [search, changeSearch] = useState("");
     const [open, setOpen] = useState(false);
-    const { state, userDispatch } = useUserContext();
-    const { authState, authDispatch } = useAuthContext();
     const history = useHistory();
+
+    const dispatch = useDispatch();
+    const [htmlUrl, loggedIn, avatarUrl, name, login] = useSelector((state: RootState) => [
+        state.user.html_url,
+        state.auth.loggedIn,
+        state.user.avatar_url,
+        state.user.name,
+        state.user.login
+    ]);
 
     const addNewGist = useCallback(() => {
         history.push(URLS.CreateGist);
     }, [history]);
 
     const viewProfile = useCallback(() => {
-        window.location.href = state.html_url;
-    }, [state.html_url]);
+        window.location.href = htmlUrl;
+    }, [htmlUrl]);
 
     const viewUserGists = useCallback(() => {
         history.push(URLS.UserGists);
@@ -43,10 +50,10 @@ const Navbar: React.FC = () => {
     }, [clientId]);
 
     const handleLogout = useCallback(() => {
-        userDispatch({ type: "LOGOUT", payload: {} })
-        authDispatch({ type: AUTH_ACTION_TYPES.LOGOUT, payload: {} })
+        dispatch({ type: USER_ACTION_TYPES.LOGOUT });
+        dispatch({ type: AUTH_ACTION_TYPES.LOGOUT });
         history.push(URLS.Default);
-    }, [authDispatch, userDispatch, history]);
+    }, [history, dispatch]);
 
     const handleNavToHome = useCallback(() => {
         history.push(URLS.Default);
@@ -65,18 +72,18 @@ const Navbar: React.FC = () => {
                     <Input value={search} handleInputChange={handleSearch} placeholder={Headings.SearchBoxPlaceholder} />
 
                     {
-                        (authState.loggedIn) ?
+                        (loggedIn) ?
                             (
                                 <DropdownWrapper className="dropdown">
                                     <DropdownButton onClick={handleToggleDropdown}>
-                                        <Image source={state.avatar_url} altText={state.name} profile={"false"} />
+                                        <Image source={avatarUrl} altText={name} profile={"false"} />
                                     </DropdownButton>
 
                                     {
                                         open && (
                                             <Dropdown>
                                                 <DropdownItem>
-                                                    Signed in as <Bold>{(state.login.length > 12) ? state.login.substring(0, 12) + "..." : state.login}</Bold>
+                                                    Signed in as <Bold>{(login.length > 12) ? login.substring(0, 12) + "..." : login}</Bold>
                                                 </DropdownItem>
 
                                                 <HR />
