@@ -39,8 +39,7 @@ export const searchGist = (id: string, payload: Gist[]) => {
 export const editGistData = (id: string, payload: Gist, data: Gist[]) => {
     return data.map((gist) => {
         if (id === gist.id) {
-            gist.files = payload.files;
-            gist.description = payload.description;
+            return { ...gist, files: payload.files, description: payload.description };
         }
         return gist;
     });

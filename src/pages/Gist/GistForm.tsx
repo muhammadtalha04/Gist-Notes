@@ -4,13 +4,11 @@ import Form from '../../components/Form/Form';
 import { FormActionTypes, GIST_ACTION_TYPES } from '../../constants/action_types';
 import Headings from '../../constants/headings';
 import { URLS } from '../../router/urls';
-import { createNewGist, updateGist } from '../../utils';
+import { createNewGist, getGist, updateGist } from '../../utils';
 import { GistPost, Params } from '../../types';
 import { Div } from './Style';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import EditGist from './EditGist';
-import CreateGist from './CreateGist';
 
 const GistForm: React.FC = () => {
     const isCreate = useRouteMatch(URLS.CreateGist);
@@ -19,9 +17,10 @@ const GistForm: React.FC = () => {
     const history = useHistory();
 
     const dispatch = useDispatch();
-    const [formState, token] = useSelector((state: RootState) => [
+    const [formState, token, fileName] = useSelector((state: RootState) => [
         state.form,
-        state.auth.token
+        state.auth.token,
+        state.form.fileName
     ]);
 
     // This function is triggered on file name change
@@ -92,6 +91,7 @@ const GistForm: React.FC = () => {
     }, [formState, history, dispatch, token, isCreate, isEdit]);
     // -------------------------------------------------
 
+    // -------------------------------------------------
     useEffect(() => {
         dispatch({ type: FormActionTypes.CLEAR_FORM });
         if (isEdit !== null) {
@@ -102,36 +102,31 @@ const GistForm: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
+    useEffect(() => {
+        if (token !== null && isEdit !== null && fileName === "") {
+            getGist(isEdit.params.id, token).then((data) => {
+                if (data) {
+                    const dataFileName = Object.keys(data['files'])[0];
+
+                    dispatch({ type: FormActionTypes.SET_FILE_NAME, payload: { fileName: dataFileName } });
+                    dispatch({ type: FormActionTypes.SET_DESCRIPTION, payload: { description: data['description'] } });
+                    dispatch({ type: FormActionTypes.SET_CONTENT, payload: { content: data['files'][dataFileName]['content'] } });
+                }
+            });
+        }
+    }, [token, isEdit, fileName, dispatch]);
+    // -------------------------------------------------
+
     return (
-        <React.Fragment>
-            {
-                (isCreate !== null) &&
-                (
-                    <CreateGist
-                        handleFileNameChange={handleFileNameChange}
-                        handleDescriptionChange={handleDescriptionChange}
-                        handleContentChange={handleContentChange}
-                        handleSaveButton={handleSaveButton}
-                        handleCancelButton={handleCancelButton}
-                    />
-                )
-            }
-            {
-                (isEdit !== null) &&
-                (
-                    <EditGist
-                        match={isEdit}
-                        handleFileNameChange={handleFileNameChange}
-                        handleDescriptionChange={handleDescriptionChange}
-                        handleContentChange={handleContentChange}
-                        handleSaveButton={handleSaveButton}
-                        handleCancelButton={handleCancelButton}
-                    />
-                )
-            }
-        </React.Fragment>
-
-
+        <Div className="container mt-5 mb-5">
+            <Form
+                handleFileNameChange={handleFileNameChange}
+                handleDescriptionChange={handleDescriptionChange}
+                handleContentChange={handleContentChange}
+                handleSaveButton={handleSaveButton}
+                handleCancelButton={handleCancelButton}
+            />
+        </Div>
     );
 }
 

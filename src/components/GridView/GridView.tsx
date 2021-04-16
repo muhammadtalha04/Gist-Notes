@@ -31,7 +31,7 @@ interface GridViewProps {
 
 const GridView: React.FC<GridViewProps> = ({ gists, handleGistEdit, handleGistDelete, handleGistFork, handleGistStar, handleGistView }) => {
     const render = useMemo(() => {
-        const cards: JSX.Element[] = generateCardsGrid(gists, handleGistDelete, handleGistEdit, handleGistFork, handleGistStar, handleGistView);
+        const cards: JSX.Element[] = generateCardsGrid(gists, handleGistView, handleGistEdit, handleGistDelete, handleGistStar, handleGistFork);
 
         return cards;
     }, [gists, handleGistDelete, handleGistEdit, handleGistFork, handleGistStar, handleGistView])
