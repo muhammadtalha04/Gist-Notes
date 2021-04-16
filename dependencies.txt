@@ -1,3 +1,4 @@
+"@reduxjs/toolkit":     This library includes the redux core as well as other essential key packages.
 "@testing-library/jest-dom":        This testing library provides a set of custom jest matchers that we can use to extend jest. 
 "@testing-library/react":           This library is used for the testing of our React components.
 "@testing-library/user-event":      This library is used to simulate the real events that would happen in the browser as the user interacts with it like a mouse click.
@@ -10,6 +11,7 @@
 "font-awesome":         Used this package to display icons in the application.
 "react":                Used this package for creating user interfaces. It is used with a react renderer like react-dom for web applications.
 "react-dom":            This package serves as an entry point to the DOM and serves as a renderer for React. It is intended to be used with the react package.
+"react-redux":          This package contains the react bindings for redux.
 "react-router":         This package contains the main routing functionality for the React Router but it is not used directly. It is a dependency to the react-router-dom package.
 "react-router-dom":     This package provides DOM bindings for React Router. It installs react-router as a  dependency to use its routing functionality.
 "react-scripts":        This package contains configurations and scripts that are used by Create React App.
