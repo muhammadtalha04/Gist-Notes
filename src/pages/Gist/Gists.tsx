@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import GridView from '../../components/GridView/GridView';
 import Icon from '../../components/Icon/Icon';
@@ -94,13 +94,42 @@ const Gist: React.FC = () => {
 
     // -------------------------------------
 
+    // To toggle the layout view
     const toggleLayout = useCallback((layout: string) => {
         setLayout(layout);
     }, [setLayout]);
+    // -------------------------------------
+
+    // Memoized variable for displaying gists
+    const renderGists = useMemo(() => {
+        return layoutType === "list" ?
+            (
+                <Table
+                    gists={gists}
+                    loggedIn={loggedIn}
+                    username={login}
+                    handleGistView={handleGistView}
+                    handleGistEdit={handleGistEdit}
+                    handleGistDelete={handleGistDelete}
+                    handleGistStar={handleGistStar}
+                    handleGistFork={handleGistFork}
+                />
+            )
+            :
+            (
+                <GridView
+                    gists={gists}
+                    handleGistEdit={handleGistEdit}
+                    handleGistDelete={handleGistDelete}
+                    handleGistFork={handleGistFork}
+                    handleGistStar={handleGistStar}
+                    handleGistView={handleGistView}
+                />
+            )
+    }, [layoutType, gists, loggedIn, login, handleGistView, handleGistEdit, handleGistDelete, handleGistFork, handleGistStar]);
+    // -------------------------------------
 
     useEffect(() => {
-        // const login = useSelector((state: RootState) => state.user.login);
-
         if (login !== undefined && login !== null) {
             if (token !== null) {
                 getPublicGists(token).then((data) => {
@@ -118,30 +147,7 @@ const Gist: React.FC = () => {
             </Div>
 
             {
-                layoutType === "list" ?
-                    (
-                        <Table
-                            gists={gists}
-                            loggedIn={loggedIn}
-                            username={login}
-                            handleGistView={handleGistView}
-                            handleGistEdit={handleGistEdit}
-                            handleGistDelete={handleGistDelete}
-                            handleGistStar={handleGistStar}
-                            handleGistFork={handleGistFork}
-                        />
-                    )
-                    :
-                    (
-                        <GridView
-                            gists={gists}
-                            handleGistEdit={handleGistEdit}
-                            handleGistDelete={handleGistDelete}
-                            handleGistFork={handleGistFork}
-                            handleGistStar={handleGistStar}
-                            handleGistView={handleGistView}
-                        />
-                    )
+                renderGists
             }
 
             <Pagination
