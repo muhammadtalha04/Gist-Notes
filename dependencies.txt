@@ -1,4 +1,3 @@
-"@reduxjs/toolkit":     This library includes the redux core as well as other essential key packages.
 "@testing-library/jest-dom":        This testing library provides a set of custom jest matchers that we can use to extend jest. 
 "@testing-library/react":           This library is used for the testing of our React components.
 "@testing-library/user-event":      This library is used to simulate the real events that would happen in the browser as the user interacts with it like a mouse click.
@@ -16,6 +15,7 @@
 "react-router-dom":     This package provides DOM bindings for React Router. It installs react-router as a  dependency to use its routing functionality.
 "react-scripts":        This package contains configurations and scripts that are used by Create React App.
 "react-spinners":       Used this package to display a loader when the login is in progress.
+"redux":                This is a state management library which helps to maintain the global state.
 "styled-components":    Used this package for styling of components by using tagged template literals and css.
 "typescript":           It is a language which extends javascript by adding types to it. We are using typescript as the main language for the development of this application.
 "web-vitals":           This package provides functionality for measuring the web vitals. Web vitals help us indentify opportunities which can be improved for better user experience.
