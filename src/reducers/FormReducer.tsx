@@ -1,5 +1,5 @@
 import { FormActionTypes } from '../constants/action_types';
-import { Action, FormState } from '../utils/types';
+import { Action, FormState } from '../types';
 
 const initState = {
     fileName: "",

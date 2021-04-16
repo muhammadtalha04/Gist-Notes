@@ -4,9 +4,9 @@ import { RootState } from '../../store';
 import { FormActionTypes } from '../../constants/action_types';
 import { getGist } from '../../utils';
 import { match } from 'react-router';
-import { Params } from '../../utils/types';
 import { Div } from './Style';
 import Form from '../../components/Form/Form';
+import { Params } from '../../types';
 
 interface EditGistProps {
     match: match<Params>;

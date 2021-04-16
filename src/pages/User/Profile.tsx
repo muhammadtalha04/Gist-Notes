@@ -11,7 +11,7 @@ import { deleteGist, forkGist, getUserGists, starGist } from '../../utils';
 import { Div, GistsDiv, UserDetailsDiv } from './Style';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { Gist } from '../../utils/types';
+import { Gist } from '../../types';
 
 const Profile: React.FC = () => {
     const [loading, setLoading] = useState(true);

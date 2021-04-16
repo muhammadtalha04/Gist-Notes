@@ -1,7 +1,24 @@
 import React, { useMemo } from 'react';
-import { generateCardsGrid } from '../../utils';
-import { Gist } from '../../utils/types';
+import { Gist, IDFunc } from '../../types';
+import Card from '../Card/Card';
 import { Div } from './Style';
+
+const generateCardsGrid = (gists: Gist[], handleGistView: IDFunc, handleGistEdit: IDFunc, handleGistDelete: IDFunc, handleGistStar: IDFunc, handleGistFork: IDFunc) => {
+    return gists.map((gist) => {
+        return (
+            <Div className="col-sm-3 mb-5" key={gist.id} onClick={() => handleGistView(gist.id)}>
+                <Card
+                    gist={gist}
+                    singleGist={false}
+                    handleGistEdit={handleGistEdit}
+                    handleGistDelete={handleGistDelete}
+                    handleGistStar={handleGistStar}
+                    handleGistFork={handleGistFork}
+                />
+            </Div>
+        )
+    });
+}
 
 interface GridViewProps {
     gists: Gist[];

@@ -1,4 +1,4 @@
-import { Action, UserState } from "../utils/types";
+import { Action, UserState } from "../types";
 import { USER_ACTION_TYPES } from "../constants/action_types";
 
 const initState = {

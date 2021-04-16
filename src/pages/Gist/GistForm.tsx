@@ -5,7 +5,7 @@ import { FormActionTypes, GIST_ACTION_TYPES } from '../../constants/action_types
 import Headings from '../../constants/headings';
 import { URLS } from '../../router/urls';
 import { createNewGist, updateGist } from '../../utils';
-import { GistPost, Params } from '../../utils/types';
+import { GistPost, Params } from '../../types';
 import { Div } from './Style';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';

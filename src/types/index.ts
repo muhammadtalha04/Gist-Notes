@@ -1,3 +1,4 @@
+// Reducer state types
 export type UserState = {
     name: string;
     id: number;
@@ -7,11 +8,31 @@ export type UserState = {
     html_url: string;
 };
 
+export type GistState = {
+    data: Gist[]
+}
+
+export type AuthState = {
+    token: string | null,
+    loggedIn: boolean,
+}
+
+export interface FormState {
+    fileName: string;
+    description: string;
+    content: string;
+    heading: string;
+}
+// --------------------------------------------
+
+// Reducer action
 export type Action = {
     type: string;
     payload: any;
 };
+// --------------------------------------------
 
+// Gist types
 type GistOwner = {
     login: string,
     avatar_url: string,
@@ -25,21 +46,14 @@ export type Gist = {
     description: string,
 }
 
-export type GistState = {
-    data: Gist[]
-}
-
-export type AuthState = {
-    token: string | null,
-    loggedIn: boolean,
-}
-
 export type GistPost = {
     files: any,
     description: string,
     public: boolean
 }
+// --------------------------------------------
 
+// Misc
 export type API_OPTIONS = {
     method: string,
     headers: object,
@@ -50,11 +64,5 @@ export interface Params {
     id: string;
 }
 
-export interface FormState {
-    fileName: string;
-    description: string;
-    content: string;
-    heading: string;
-}
-
-export type HandleIDFunc = (id: string) => void;
+export type IDFunc = (id: string) => void;
+// --------------------------------------------

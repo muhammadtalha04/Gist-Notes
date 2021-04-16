@@ -1,6 +1,6 @@
 import { GIST_ACTION_TYPES } from "../constants/action_types";
 import { editGistData, removeGist, searchGist } from "../utils";
-import { Action, GistState } from "../utils/types";
+import { Action, GistState } from "../types";
 
 const initState = {
     data: []

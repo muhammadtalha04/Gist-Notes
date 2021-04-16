@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Colors } from '../../constants/colors';
 import { getGistContent } from '../../utils';
-import { Gist } from '../../utils/types';
+import { Gist } from '../../types';
 import Icon from '../Icon/Icon';
 import Text from '../Text/Text';
 import { CODE, ContentWrapper, FileContentWrapper, FileNameWrapper, GistDetails, PRE, Span, UserDetailsWrapper } from './Style';

@@ -4,7 +4,7 @@ import Card from '../../components/Card/Card';
 import { GIST_ACTION_TYPES } from '../../constants/action_types';
 import { URLS } from '../../router/urls';
 import { deleteGist, forkGist, getGistData, starGist } from '../../utils';
-import { Gist } from '../../utils/types';
+import { Gist } from '../../types';
 import { Div } from './Style';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
